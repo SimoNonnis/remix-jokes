@@ -22,7 +22,9 @@ export const action = async ({ request }: ActionArgs) => {
   const name = form.get("name");
   const content = form.get("content");
 
-  if (typeof name !== "string" || typeof content !== "string") {
+  const alphaExp = /^[a-zA-Z]+$/;
+
+  if (!alphaExp.test(name) || !alphaExp.test(content)) {
     return badRequest({
       fieldErrors: null,
       fields: null,
