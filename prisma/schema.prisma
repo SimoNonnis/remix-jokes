@@ -10,10 +10,23 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model User {
+  id String @id @default(uuid())
+  username String @unique
+  passwordHash String
+  jokes Joke[]
+  
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
 model Joke {
   id String @id @default(uuid())
+  jokesterId String
+  jokester User @relation(fields: [jokesterId], references: [id], onDelete: Cascade)
   name String
   content String
+  
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
 }
