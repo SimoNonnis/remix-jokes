@@ -2,6 +2,7 @@ import type { LinksFunction, ActionArgs } from "@remix-run/node";
 import { useSearchParams, Link, useActionData } from "@remix-run/react";
 import { badRequest } from "~/utils/request.server";
 import { db } from "~/utils/db.server";
+import { login } from "~/utils/session.server";
 
 import styleUrl from "~/styles/login.css";
 
@@ -37,7 +38,7 @@ export const action = async ({ request }: ActionArgs) => {
   const password = form.get("password");
   const redirectTo = validateUrl(form.get("redirectTo") || "/jokes");
 
-  const alphaExp = /^[a-zA-Z]+$/; // * Only string.
+  const alphaExp = /^[/a-zA-Z]+$/; // * Only string.
 
   if (
     !alphaExp.test(loginType) ||
@@ -69,13 +70,23 @@ export const action = async ({ request }: ActionArgs) => {
 
   switch (loginType) {
     case "login": {
-      // TODO login to get the user
-      // TODO if there's no user, return the fields and a formError
+      const user = await login({ username, password });
+      console.log("🚀 -> action -> user: ", user);
+
+      if (!user) {
+        return badRequest({
+          fieldErrors: null,
+          fields,
+          formError: "Username/Password combination is incorrect",
+        });
+      }
+
       // TODO if there is a user, create their session and redirect to /jokes
+
       return badRequest({
         fieldErrors: null,
         fields,
-        formError: "Not implemented",
+        formError: "Case - Login - Not implemented",
       });
     }
     case "register": {
@@ -91,17 +102,18 @@ export const action = async ({ request }: ActionArgs) => {
 
       // TODO create the user
       // TODO create their session and redirect to /jokes
+
       return badRequest({
         fieldErrors: null,
         fields,
-        formError: "Not implemented",
+        formError: "Case - Register - Not implemented",
       });
     }
     default: {
       return badRequest({
         fieldErrors: null,
         fields,
-        formError: `Login type invalid`,
+        formError: `Case - Default - Login type invalid`,
       });
     }
   }
