@@ -2,7 +2,7 @@ import type { LinksFunction, ActionArgs } from "@remix-run/node";
 import { useSearchParams, Link, useActionData } from "@remix-run/react";
 import { badRequest } from "~/utils/request.server";
 import { db } from "~/utils/db.server";
-import { login } from "~/utils/session.server";
+import { login, createUserSession } from "~/utils/session.server";
 
 import styleUrl from "~/styles/login.css";
 
@@ -81,13 +81,7 @@ export const action = async ({ request }: ActionArgs) => {
         });
       }
 
-      // TODO if there is a user, create their session and redirect to /jokes
-
-      return badRequest({
-        fieldErrors: null,
-        fields,
-        formError: "Case - Login - Not implemented",
-      });
+      return createUserSession({ userId: user.id, redirectTo });
     }
     case "register": {
       const userExist = await db.user.findFirst({ where: { username } });
