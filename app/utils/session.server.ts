@@ -72,8 +72,7 @@ export async function requireUserId(
   request: Request,
   redirectTo: string = new URL(request.url).pathname
 ) {
-  const session = await getUserSession(request);
-  const userId = session.get("userId");
+  const userId = await getUserId(request);
 
   if (!userId || typeof userId !== "string") {
     const searchParams = new URLSearchParams({ redirectTo: redirectTo });
@@ -82,5 +81,33 @@ export async function requireUserId(
   }
 
   return userId;
+}
+
+export async function getUser(request: Request) {
+  const userId = await getUserId(request);
+
+  if (!userId || typeof userId !== "string") return null;
+
+  try {
+    const user = await db.user.findUnique({
+      where: { id: userId },
+      select: { id: true, username: true },
+    });
+
+    return user;
+  } catch {
+    throw logout(request);
+  } finally {
+  }
+}
+
+export async function logout(request: Request) {
+  const session = await getUserSession(request);
+
+  return redirect("/login", {
+    headers: {
+      "Set-Cookie": await storage.destroySession(session),
+    },
+  });
 }
 // * END USER SESSION
