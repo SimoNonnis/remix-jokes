@@ -2,7 +2,7 @@ import type { LinksFunction, ActionArgs } from "@remix-run/node";
 import { useSearchParams, Link, useActionData } from "@remix-run/react";
 import { badRequest } from "~/utils/request.server";
 import { db } from "~/utils/db.server";
-import { login, createUserSession } from "~/utils/session.server";
+import { login, createUserSession, register } from "~/utils/session.server";
 
 import styleUrl from "~/styles/login.css";
 
@@ -93,20 +93,23 @@ export const action = async ({ request }: ActionArgs) => {
         });
       }
 
-      // TODO create the user
-      // TODO create their session and redirect to /jokes
+      const user = await register({ username, password });
 
-      return badRequest({
-        fieldErrors: null,
-        fields,
-        formError: "Case - Register - Not implemented",
-      });
+      if (!user) {
+        return badRequest({
+          fieldErrors: null,
+          fields,
+          formError: `Something went wrong trying to create a new user.`,
+        });
+      }
+
+      return createUserSession({ userId: user.id, redirectTo });
     }
     default: {
       return badRequest({
         fieldErrors: null,
         fields,
-        formError: `Case - Default - Login type invalid`,
+        formError: `Login/Register type invalid`,
       });
     }
   }

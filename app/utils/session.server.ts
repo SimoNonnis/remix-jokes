@@ -2,7 +2,7 @@ import bcrypt from "bcryptjs";
 import { createCookieSessionStorage, redirect } from "@remix-run/node";
 import { db } from "~/utils/db.server";
 
-// * LOGIN
+// * LOGIN/REGISTER
 type LoginForm = {
   username: string;
   password: string;
@@ -17,7 +17,14 @@ export async function login({ username, password }: LoginForm) {
 
   return { id: user.id, username };
 }
-// * END LOGIN
+
+export async function register({ username, password }: LoginForm) {
+  const passwordHash = await bcrypt.hash(password, 10);
+  const user = await db.user.create({ data: { username, passwordHash } });
+
+  return { id: user.id, username };
+}
+// * END LOGIN/REGISTER
 
 // * USER SESSION
 const sessionSecret = process.env.SESSION_SECRET;
