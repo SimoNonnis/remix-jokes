@@ -49,7 +49,7 @@ export const action = async ({ request }: ActionArgs) => {
     return badRequest({
       fieldErrors: null,
       fields: null,
-      formError: `Form not submitted correctly.`,
+      formError: `Login - Form not submitted correctly!`,
     });
   }
 
@@ -71,7 +71,6 @@ export const action = async ({ request }: ActionArgs) => {
   switch (loginType) {
     case "login": {
       const user = await login({ username, password });
-      console.log("🚀 -> action -> user: ", user);
 
       if (!user) {
         return badRequest({
