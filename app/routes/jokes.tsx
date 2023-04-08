@@ -63,7 +63,14 @@ export default function JokesRoute() {
                   <Link to={joke.id}>{joke.name}</Link>
                 </li>
               ))}
+
+              <li>
+                <Link to="/jokes.rss" reloadDocument target="_blank">
+                  Rss
+                </Link>
+              </li>
             </ul>
+
             <Link to="new" className="button">
               Add your own
             </Link>

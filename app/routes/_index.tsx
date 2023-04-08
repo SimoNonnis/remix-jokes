@@ -28,6 +28,11 @@ export default function IndexRoute() {
             <li>
               <Link to="login">Login/Register</Link>
             </li>
+            <li>
+              <Link to="jokes.rss" reloadDocument target="_blank">
+                Rss
+              </Link>
+            </li>
           </ul>
         </nav>
       </div>
