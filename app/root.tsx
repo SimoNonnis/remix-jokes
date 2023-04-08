@@ -1,5 +1,11 @@
 import type { LinksFunction } from "@remix-run/node";
-import { LiveReload, Outlet, Links } from "@remix-run/react";
+import {
+  LiveReload,
+  Outlet,
+  Links,
+  useRouteError,
+  isRouteErrorResponse,
+} from "@remix-run/react";
 
 import globalStylesUrl from "./styles/global.css";
 import globalMediumStylesUrl from "./styles/global-medium.css";
@@ -54,10 +60,23 @@ export default function App() {
   );
 }
 
-export function ErrorBoundary({ error }: { error: Error }) {
+export function ErrorBoundary() {
+  const error = useRouteError();
+
+  // ! when true, this is what used to go to `CatchBoundary`
+  if (isRouteErrorResponse(error)) {
+    return (
+      <Document title="Uh-oh! App Route Error">
+        <h1>App Route Error</h1>
+        <pre>{error.data.message}</pre>
+      </Document>
+    );
+  }
+
   return (
     <Document title="Uh-oh!">
-      <h1>App Error</h1>
+      <h1>Uh oh ...</h1>
+      <p>Something went wrong.</p>
       <pre>{error.message}</pre>
     </Document>
   );
