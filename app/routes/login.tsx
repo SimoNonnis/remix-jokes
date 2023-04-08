@@ -3,7 +3,7 @@ import type {
   ActionArgs,
   V2_MetaFunction,
 } from "@remix-run/node";
-import { useSearchParams, Link, useActionData } from "@remix-run/react";
+import { useSearchParams, Link, useActionData, Form } from "@remix-run/react";
 import { badRequest } from "~/utils/request.server";
 import { db } from "~/utils/db.server";
 import { login, createUserSession, register } from "~/utils/session.server";
@@ -135,7 +135,7 @@ export default function Login() {
       <div className="content" data-light="">
         <h1>Login</h1>
 
-        <form method="post">
+        <Form method="post">
           <input
             type="hidden"
             name="redirectTo"
@@ -227,7 +227,7 @@ export default function Login() {
           <button type="submit" className="button">
             Submit
           </button>
-        </form>
+        </Form>
 
         <div className="links">
           <ul>
