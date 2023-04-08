@@ -1,10 +1,11 @@
-import type { LinksFunction } from "@remix-run/node";
+import type { LinksFunction, V2_MetaFunction } from "@remix-run/node";
 import {
   LiveReload,
   Outlet,
   Links,
   useRouteError,
   isRouteErrorResponse,
+  Meta,
 } from "@remix-run/react";
 
 import globalStylesUrl from "./styles/global.css";
@@ -30,6 +31,13 @@ export const links: LinksFunction = () => {
   ];
 };
 
+export const meta: V2_MetaFunction<typeof loader> = ({ data }) => {
+  return [
+    { charset: "utf-8" },
+    { description: "Learn Remix and laugh at the same time!" },
+  ];
+};
+
 type Doc = {
   children: React.ReactNode;
   title?: string;
@@ -39,7 +47,7 @@ function Document({ children, title = `Remix: So great, it's funny!` }: Doc) {
   return (
     <html lang="en">
       <head>
-        <meta charSet="utf-8" />
+        <Meta />
         <title>{title}</title>
 
         <Links />
