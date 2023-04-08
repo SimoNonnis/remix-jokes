@@ -24,19 +24,41 @@ export const links: LinksFunction = () => {
   ];
 };
 
-export default function App() {
+type Doc = {
+  children: React.ReactNode;
+  title?: string;
+};
+
+function Document({ children, title = `Remix: So great, it's funny!` }: Doc) {
   return (
     <html lang="en">
       <head>
         <meta charSet="utf-8" />
-        <title>Remix: So great, it's funny!</title>
+        <title>{title}</title>
 
         <Links />
       </head>
       <body>
-        <Outlet />
+        {children}
         <LiveReload />
       </body>
     </html>
+  );
+}
+
+export default function App() {
+  return (
+    <Document>
+      <Outlet />
+    </Document>
+  );
+}
+
+export function ErrorBoundary({ error }: { error: Error }) {
+  return (
+    <Document title="Uh-oh!">
+      <h1>App Error</h1>
+      <pre>{error.message}</pre>
+    </Document>
   );
 }
